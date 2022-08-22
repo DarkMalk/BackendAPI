@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test PORT=3002 NODE_OPTIONS=--experimental-vm-modules npx jest --verbose --silent ./tests/notes.test.js",
+    "test": "cross-env NODE_ENV=test PORT=3002 NODE_OPTIONS=--experimental-vm-modules npx jest --verbose --silent",
     "test:watch": "npm run test -- --watch"
   },
   "author": "DarkMalk",

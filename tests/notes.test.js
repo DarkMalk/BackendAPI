@@ -1,7 +1,8 @@
 import { server } from '../index.js'
 import mongoose from 'mongoose'
 import Note from '../models/Note.js'
-import { INITIAL_NOTES, deleteAndCreateNoteTest, firstNoteTest, api } from '../helper/helpers.js'
+import User from '../models/User.js'
+import { INITIAL_NOTES, deleteAndCreateNoteTest, firstNoteTest, api, createUserTest } from '../helper/helpers.js'
 
 beforeEach(async () => {
   await deleteAndCreateNoteTest()
@@ -43,9 +44,10 @@ describe('GET /api/notes', () => {
 
 describe('POST /api/notes', () => {
   test('Create a valid note', async () => {
+    const { id } = await createUserTest()
     const title = 'new note valid'
     const content = 'content of note valid'
-    const userId = '630131ec6ed384839ccfefad'
+    const userId = id
 
     const matchObject = { title, content, user: userId }
 
@@ -127,5 +129,6 @@ describe('PUT /api/notes/:id', () => {
 afterAll(async () => {
   server.close()
   await Note.deleteMany({})
+  await User.deleteMany({})
   mongoose.connection.close()
 })

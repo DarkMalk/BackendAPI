@@ -4,10 +4,9 @@ import User from '../models/User.js'
 const usersRouter = Router()
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('notes')
   res.json(users)
 })
-
 
 usersRouter.post('/', async (req, res) => {
   const { username, email, password } = req.body

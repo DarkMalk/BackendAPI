@@ -25,7 +25,8 @@ const firstNoteTest = async () => {
 
 const createUserTest = async () => {
   const res = await api.post('/api/users').send({ username: 'test', email: 'test@gmail.com', password: 'hola123' })
-  return res.body
+  const { id, username, email } = res.body
+  return { id, username, email }
 }
 
 const getAllUsers = async () => {

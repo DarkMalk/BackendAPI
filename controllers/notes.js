@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import Note from '../models/Note.js'
+import User from '../models/User.js'
 
 const notesRouter = Router()
 
@@ -9,14 +10,19 @@ notesRouter.get('/', (req, res) => {
     .catch(() => res.status(500).json({ error: 'An error has ocurred!' }))
 })
 
-notesRouter.post('/', (req, res) => {
+notesRouter.post('/', async (req, res) => {
   const { title, content, user } = req.body
   if (!title || !content) return res.status(400).json({ error: 'title and content is required' })
   if (!user) return res.status(400).json({ error: 'Id from user is required' })
   const newNote = new Note({ title, content, user })
   newNote
     .save()
-    .then(note => res.status(201).json(note))
+    .then(async note => {
+      const user = await User.findById(note.user)
+      user.notes = [...user.notes, note.id]
+      await user.save()
+      return res.status(201).json(note)
+    })
     .catch(() => res.status(500).json({ error: 'An error has ocurred!' }))
 })
 
