@@ -1,5 +1,4 @@
-import mongoose from 'mongoose'
-const { Schema, model } = mongoose
+const { Schema, model } = require('mongoose')
 
 const noteSchema = new Schema({
   title: { type: String, required: true }, // -> propiedad unique: true (arroja error si hay otro dato igual)
@@ -18,4 +17,4 @@ noteSchema.set('toJSON', {
 
 const Note = model('Note', noteSchema)
 
-export default Note
+module.exports = Note

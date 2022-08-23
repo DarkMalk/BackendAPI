@@ -1,12 +1,14 @@
-import express from 'express'
-import 'dotenv/config'
-import cors from 'cors'
-import notFound from './middleware/notFound.js'
-import usersRouter from './controllers/users.js'
-import notesRouter from './controllers/notes.js'
+const express = require('express')
+const cors = require('cors')
+const notFound = require('./middleware/notFound.js')
+const usersRouter = require('./controllers/users.js')
+const notesRouter = require('./controllers/notes.js')
+const loginRouter = require('./controllers/login.js')
+const handleErrors = require('./middleware/handleErrors.js')
+require('dotenv').config()
 
 // Database and models
-import './connection-database.js'
+require('./connection-database.js')
 
 // Application
 const app = express()
@@ -18,14 +20,16 @@ app.use(cors())
 
 // Routes of server
 
+app.use('/api/login', loginRouter)
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
 
 // MiddleWares
+app.use(handleErrors)
 app.use(notFound)
 
 // Server listen and message
 const PORT = process.env.PORT || 5000
 const server = app.listen(PORT, () => console.log(`Server listen on port: ${PORT}`))
 
-export { app, server }
+module.exports = { app, server }

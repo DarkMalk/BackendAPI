@@ -1,19 +1,22 @@
-import { Router } from 'express'
-import Note from '../models/Note.js'
-import User from '../models/User.js'
-
+const { Router } = require('express')
+const Note = require('../models/Note.js')
+const User = require('../models/User.js')
+require('dotenv').config()
+const { Errors } = require('../helper/helpers.js')
+const userExtractor = require('../middleware/userExtractor.js')
 const notesRouter = Router()
 
-notesRouter.get('/', (req, res) => {
-  Note.find({})
+notesRouter.get('/', userExtractor, (req, res, next) => {
+  const { user } = req.body
+  Note.find({ user })
     .then(notes => res.json(notes))
-    .catch(() => res.status(500).json({ error: 'An error has ocurred!' }))
+    .catch(() => next())
 })
 
-notesRouter.post('/', async (req, res) => {
+notesRouter.post('/', userExtractor, async (req, res, next) => {
   const { title, content, user } = req.body
-  if (!title || !content) return res.status(400).json({ error: 'title and content is required' })
-  if (!user) return res.status(400).json({ error: 'Id from user is required' })
+
+  if (!title || !content) return next(Errors.MissingTitleOrContent)
   const newNote = new Note({ title, content, user })
   newNote
     .save()
@@ -23,29 +26,30 @@ notesRouter.post('/', async (req, res) => {
       await user.save()
       return res.status(201).json(note)
     })
-    .catch(() => res.status(500).json({ error: 'An error has ocurred!' }))
+    .catch(() => next())
 })
 
-notesRouter.get('/:id', (req, res) => {
+notesRouter.get('/:id', (req, res, next) => {
   const id = req.params.id
   Note.find({ _id: id })
     .then(note => res.status(302).json(note))
-    .catch(() => res.status(404).json({ error: 'Note not found' }))
+    .catch(error => next(error))
 })
 
-notesRouter.put('/:id', (req, res) => {
+notesRouter.put('/:id', userExtractor, (req, res, next) => {
   const id = req.params.id
   const { title, content } = req.body
+  if (!title && !content) return next(Errors.MissingTitleAndContent)
   Note.findOneAndUpdate({ _id: id }, { title, content }, { returnDocument: 'after' })
     .then(note => res.json(note))
-    .catch(() => res.status(404).json({ error: `Note not exist with the id: ${id}` }))
+    .catch(error => next(error))
 })
 
-notesRouter.delete('/:id', (req, res) => {
+notesRouter.delete('/:id', userExtractor, (req, res, next) => {
   const id = req.params.id
   Note.findOneAndRemove({ _id: id })
     .then(() => res.status(204).end())
-    .catch(() => res.status(404).json({ error: `Note not exist with the id: ${id}` }))
+    .catch(error => next(error))
 })
 
-export default notesRouter
+module.exports = notesRouter

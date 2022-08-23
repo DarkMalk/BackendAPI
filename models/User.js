@@ -1,5 +1,4 @@
-import mongoose from 'mongoose'
-const { Schema, model } = mongoose
+const { Schema, model } = require('mongoose')
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
@@ -21,4 +20,4 @@ userSchema.set('toJSON', {
 
 const User = model('User', userSchema)
 
-export default User
+module.exports = User
