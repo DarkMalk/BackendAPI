@@ -2,7 +2,7 @@ const { Router } = require('express')
 const Note = require('../models/Note.js')
 const User = require('../models/User.js')
 require('dotenv').config()
-const { Errors } = require('../helper/helpers.js')
+const Errors = require('../helper/Errors.js')
 const userExtractor = require('../middleware/userExtractor.js')
 const notesRouter = Router()
 
