@@ -3,7 +3,7 @@ const User = require('../models/User.js')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const { Errors } = require('../helper/helpers.js')
+const Errors = require('../helper/Errors.js')
 const loginRouter = Router()
 
 loginRouter.post('/', async (req, res, next) => {
