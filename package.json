@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Backend Project StickyNotes",
+  "description": "notes api",
   "type": "commonjs",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
